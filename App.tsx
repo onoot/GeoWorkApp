@@ -12,8 +12,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import LocationService from './components/LocationService';
 import LocationDisplay from './components/LocationDisplay';
@@ -82,7 +82,9 @@ const AppContent = () => {
 const App = () => {
   return (
     <ThemeProvider>
-      <AppContent />
+      <SafeAreaProvider> 
+        <AppContent />
+      </SafeAreaProvider>
     </ThemeProvider>
   );
 };
