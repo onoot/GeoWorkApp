@@ -1,3 +1,10 @@
+## Приложение для получения смен в Вашем городе
+    автоматическое опредление города
+    Темная и светлая тема
+    ![alt text](image.png)
+    ![alt text](image-1.png)
+    ![alt text](image-2.png)
+    ![alt text](image-3.png)
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
