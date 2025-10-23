@@ -2,9 +2,13 @@
 > **Note**:автоматическое опредление города
 > **Note**:Темная и светлая тема
 ![alt text](image.png)
+Рис. 1
 ![alt text](image-1.png)
+Рис. 2
 ![alt text](image-2.png)
+Рис. 3
 ![alt text](image-3.png)
+Рис. 4
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
