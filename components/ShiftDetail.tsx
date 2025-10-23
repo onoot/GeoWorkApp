@@ -23,7 +23,7 @@ const ShiftDetail: React.FC<ShiftDetailProps> = ({ shift, onClose }) => {
             styles.closeText,
             {
               color: isDark ? '#ecebecff' : '#007AFF',
-              backgroundColor: isDark ? '#eeeeee' : '#eee',
+              backgroundColor: !isDark?'#eee':'#181818',
             },
           ]}
         >
