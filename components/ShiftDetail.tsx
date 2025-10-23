@@ -18,7 +18,17 @@ const ShiftDetail: React.FC<ShiftDetailProps> = ({ shift, onClose }) => {
       contentContainerStyle={[styles.container, { backgroundColor: isDark ? '#121212' : '#fff' }]}
     >
       <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-        <Text style={[styles.closeText, { color: isDark ? '#BB86FC' : '#007AFF' }]}>Назад</Text>
+        <Text
+          style={[
+            styles.closeText,
+            {
+              color: isDark ? '#ecebecff' : '#007AFF',
+              backgroundColor: isDark ? '#eeeeee' : '#eee',
+            },
+          ]}
+        >
+          Назад
+        </Text>
       </TouchableOpacity>
 
       <Image source={{ uri: (shift.logo || '').trim() }} style={styles.logo} />
@@ -82,7 +92,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginBottom: 12,
     padding: 8,
-    backgroundColor: '#eee',
     borderRadius: 6,
   },
   closeText: {
