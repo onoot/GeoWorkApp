@@ -5,40 +5,105 @@
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import LocationService from './components/LocationService';
+import LocationDisplay from './components/LocationDisplay';
+import { shiftStore, Shift } from './stores/ShiftStore';
+import ShiftList from './components/ShiftList';
+import ShiftDetail from './components/ShiftDetail';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+const AppContent = () => {
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
+  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [showDetail, setShowDetail] = useState(false);
+
+  const handleLocationUpdate = useCallback((coords: { latitude: number; longitude: number }) => {
+    setLocation(coords);
+    shiftStore.fetchShifts(coords.latitude, coords.longitude);
+  }, []);
+
+  const handleSelectShift = useCallback((shift: Shift) => {
+    shiftStore.selectShift(shift);
+    setShowDetail(true);
+  }, []);
+
+  const handleCloseDetail = useCallback(() => {
+    setShowDetail(false);
+    shiftStore.clearSelectedShift();
+  }, []);
+
+  const handleRefresh = useCallback(() => {
+    if (location) {
+      shiftStore.fetchShifts(location.latitude, location.longitude);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    StatusBar.setBarStyle(isDark ? 'light-content' : 'dark-content');
+  }, [isDark]);
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: isDark ? '#121212' : '#fff' }]}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={toggleTheme} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+          <Text style={[styles.themeIcon, { color: isDark ? '#BB86FC' : '#6200EE' }]}>
+            {isDark ? '☀️' : '🌙'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <LocationService onLocationUpdate={handleLocationUpdate} />
+      <LocationDisplay location={location} />
+
+      <View style={styles.content}>
+        {!showDetail ? (
+          <ShiftList
+            onSelect={handleSelectShift}
+            onRefresh={handleRefresh}
+            refreshing={shiftStore.loading && shiftStore.shifts.length > 0}/>
+        ) : shiftStore.selectedShift ? (
+          <ShiftDetail shift={shiftStore.selectedShift} onClose={handleCloseDetail}/>
+        ) : null}
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const App = () => {
+  return (
+    <ThemeProvider>
       <AppContent />
-    </SafeAreaProvider>
+    </ThemeProvider>
   );
-}
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 4,
+  },
+  themeIcon: {
+    fontSize: 20,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
   },
 });
 
